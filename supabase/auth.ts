@@ -1,3 +1,5 @@
+'use client'
+
 import supabase from '@/supabase/client'
 
 export async function login(email: string, password: string) {
@@ -13,4 +15,8 @@ export async function register(email: string, password: string) {
   if (res.error) return res
 
   return supabase.auth.signInWithPassword({ email, password })
+}
+
+export async function logout() {
+  return supabase.auth.signOut()
 }

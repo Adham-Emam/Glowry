@@ -2,10 +2,13 @@
 
 import * as Yup from 'yup'
 import { Formik, Form, Field } from 'formik'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Loader } from 'lucide-react'
 import { login, register } from '@/supabase/auth'
+import { useAuth } from '@/supabase/hooks/useAuth'
 import { toast } from 'sonner'
+import { use, useEffect } from 'react'
 
 const loginValidationSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -32,6 +35,15 @@ type AuthValues = {
 }
 
 export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
+  const { loading, isAuthenticated } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!loading && isAuthenticated) {
+      router.replace('/')
+    }
+  }, [loading, isAuthenticated, router])
+
   const handleSubmit = async (values: AuthValues) => {
     const { email, password } = values
 

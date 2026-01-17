@@ -27,10 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased scroll-smooth`}
       >
-        {/* <Provider store={store}></Provider> */}
-        {children}
+        <main>{children}</main>
         <Toaster className="z-50" position="bottom-right" />
       </body>
     </html>

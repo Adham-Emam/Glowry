@@ -140,3 +140,78 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+/* CLS Prevention */
+* {
+  box-sizing: border-box;
+}
+
+/* Reserve space for animations */
+[style*='will-change'] {
+  contain: layout style paint;
+}
+
+/* Prevent layout shifts from font loading */
+body {
+  font-display: swap;
+}
+
+/* Ensure stable navbar height */
+nav {
+  min-height: 68px;
+}
+
+@layer utilities {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem; /* 16px */
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      max-width: 1280px;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .container {
+      max-width: 1536px;
+    }
+  }
+}
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--primary);
+  }
+}

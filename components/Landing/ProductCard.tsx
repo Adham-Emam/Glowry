@@ -5,8 +5,8 @@ import type { Product } from '@/types/products'
 
 export default function ProductCard({ product }: { product: Product }) {
   const primaryImage =
-    product.product_images?.find((img) => img.is_primary)?.image_url ||
-    product.product_images?.[0]?.image_url ||
+    product.product_images?.find((img) => img.is_primary)?.display_url ||
+    product.product_images?.[0]?.display_url ||
     'https://dummyimage.com/600x400/000/fff'
 
   return (

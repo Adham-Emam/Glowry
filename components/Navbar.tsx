@@ -79,7 +79,7 @@ export default function Navbar() {
           ))}
       </nav>
 
-      <div className="flex items-center justify-center gap-4">
+      <div className="hidden lg:flex items-center justify-center gap-4">
         {isAuthenticated ? (
           <>
             <Button size="icon" asChild>
@@ -108,52 +108,72 @@ export default function Navbar() {
             </Button>
           </>
         )}
+      </div>
 
-        <div className="lg:hidden">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="icon" variant="outline">
-                <Menu />
-              </Button>
-            </SheetTrigger>
-            <SheetContent>
-              <SheetHeader>
-                <SheetTitle className="font-bold text-2xl">Glowry</SheetTitle>
-              </SheetHeader>
-              <nav className="px-2 py-4">
-                {navLinks
-                  .filter((link) => !link.protected || isAuthenticated)
-                  .map((link, index) => (
-                    <div key={index} className=" w-full">
-                      <Link
-                        href={link.href}
-                        className={`block hover:bg-primary/50 px-4 py-4 overflow-y-auto duration-200 ${
-                          pathname === link.href
-                            ? 'bg-primary text-white hover:bg-primary!'
-                            : ''
-                        }`}
-                      >
-                        {link.name}
-                      </Link>
-                      <Separator className="my-2" />
-                    </div>
-                  ))}
-              </nav>
-              <SheetFooter>
-                {isAuthenticated && (
-                  <>
-                    <Button variant="secondary" className="border">
-                      <Link href="/register">Register</Link>
-                    </Button>
-                    <Button>
-                      <Link href="/login">Login</Link>
-                    </Button>
-                  </>
-                )}
-              </SheetFooter>
-            </SheetContent>
-          </Sheet>
-        </div>
+      <div className="lg:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button size="icon" variant="outline">
+              <Menu />
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle className="font-bold text-2xl">Glowry</SheetTitle>
+            </SheetHeader>
+            <nav className="px-2 py-4 overflow-y-auto">
+              {navLinks
+                .filter((link) => !link.protected || isAuthenticated)
+                .map((link, index) => (
+                  <div key={index} className=" w-full">
+                    <Link
+                      href={link.href}
+                      className={`block hover:bg-primary/50 px-4 py-4 overflow-y-auto duration-200 ${
+                        pathname === link.href
+                          ? 'bg-primary text-white hover:bg-primary!'
+                          : ''
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                    <Separator className="my-2" />
+                  </div>
+                ))}
+              {isAuthenticated && (
+                <Link
+                  href="/cart"
+                  className={`block hover:bg-primary/50 px-4 py-4 overflow-y-auto duration-200 ${
+                    pathname === '/cart'
+                      ? 'bg-primary text-white hover:bg-primary!'
+                      : ''
+                  }`}
+                >
+                  Shopping Cart
+                </Link>
+              )}
+            </nav>
+            <SheetFooter>
+              {isAuthenticated ? (
+                <Button
+                  variant="destructive"
+                  className="w-full border border-ring hover:bg-destructive hover:text-white"
+                  asChild
+                >
+                  <Link href="/logout">Sign Out</Link>
+                </Button>
+              ) : (
+                <>
+                  <Button variant="secondary" className="border">
+                    <Link href="/register">Register</Link>
+                  </Button>
+                  <Button>
+                    <Link href="/login">Login</Link>
+                  </Button>
+                </>
+              )}
+            </SheetFooter>
+          </SheetContent>
+        </Sheet>
       </div>
     </header>
   )

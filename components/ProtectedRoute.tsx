@@ -5,7 +5,11 @@ import { useEffect } from 'react'
 import { useAuth } from '@/supabase/hooks/useAuth'
 import Loading from './ui/Loading'
 
-export default function ProtectedRoute({ children }: any) {
+export default function ProtectedRoute({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const { user, loading } = useAuth()
   const router = useRouter()
 
@@ -17,5 +21,5 @@ export default function ProtectedRoute({ children }: any) {
 
   if (loading) return <Loading />
 
-  return children
+  return user ? children : null
 }

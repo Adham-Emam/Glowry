@@ -7,6 +7,7 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 export default function Logout() {
   useEffect(() => {
     logout()
+    window.document.title = 'Logging out...'
   }, [])
 
   return (

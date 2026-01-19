@@ -1,5 +1,10 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 import AuthForm from '../components/AuthForm'
+
+export const metadata: Metadata = {
+  title: 'Glowry | Login',
+}
 
 export default function Login() {
   return (

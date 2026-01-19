@@ -1,6 +1,8 @@
 'use client'
 
-import supabase from '@/supabase/client'
+import { createClient } from './conf/client'
+
+const supabase = createClient()
 
 export async function login(email: string, password: string) {
   return supabase.auth.signInWithPassword({

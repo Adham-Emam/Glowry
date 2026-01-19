@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 // import { Provider } from 'react-redux'
+import Navbar from '@/components/Navbar'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
@@ -30,6 +31,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased scroll-smooth`}
       >
+        <Navbar />
+
         <main>{children}</main>
         <Toaster className="z-50" position="bottom-right" />
       </body>

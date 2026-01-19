@@ -3,7 +3,7 @@ import AuthForm from '../components/AuthForm'
 
 export default function Login() {
   return (
-    <div className="w-full min-h-screen flex flex-col justify-center items-center">
+    <div className="w-full min-h-[calc(100vh-120px)] flex flex-col justify-center items-center">
       <div className="text-center mb-4">
         <h1 className="font-extrabold text-3xl">Login</h1>
         <p>Please login to continue</p>

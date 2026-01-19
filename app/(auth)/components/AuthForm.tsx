@@ -83,7 +83,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
       }}
     >
       {({ errors, touched, isSubmitting }) => (
-        <Form className="min-w-[90%] lg:w-125 px-4 pt-8 flex flex-col items-center justify-center gap-4">
+        <Form className="w-[90vw] md:w-125 px-4 pt-8 flex flex-col items-center justify-center gap-4">
           <div className="w-full flex flex-col gap-1 mx-0">
             <label htmlFor="email">Email</label>
             <Field

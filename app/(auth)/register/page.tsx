@@ -3,7 +3,7 @@ import AuthForm from '../components/AuthForm'
 
 export default function Register() {
   return (
-    <div className="w-full min-h-screen flex flex-col justify-center items-center">
+    <div className="w-full min-h-[calc(100vh-120px)] flex flex-col justify-center items-center">
       <div className="text-center mb-4">
         <h1 className="font-extrabold text-3xl">Register</h1>
         <p>Create your account to start ordering</p>

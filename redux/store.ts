@@ -1,11 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
 import cartReducer from './slices/cartSlice'
 
-export const store = configureStore({
-  reducer: {
-    cart: cartReducer,
-  },
-})
+// 1. Wrap it in a function so each request gets its own store
+export const makeStore = () => {
+  return configureStore({
+    reducer: {
+      cart: cartReducer,
+    },
+  })
+}
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+// 2. Export these types so your hooks know what's up
+export type AppStore = ReturnType<typeof makeStore>
+export type RootState = ReturnType<AppStore['getState']>
+export type AppDispatch = AppStore['dispatch']

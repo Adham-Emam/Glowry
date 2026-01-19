@@ -7,11 +7,21 @@ import type { Product } from '@/types/products'
 
 const PAGE_SIZE = 12
 
-export const getProducts = async (query = '', page = 1) => {
+export const getProducts = async (
+  query = '',
+  page = 1,
+  offers?: boolean,
+  wishlist?: boolean,
+) => {
   const supabase = await createClient()
 
   const from = (page - 1) * PAGE_SIZE
   const to = from + PAGE_SIZE - 1
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  const currentUserId = user?.id
 
   let supabaseQuery = supabase
     .from('products')
@@ -19,12 +29,38 @@ export const getProducts = async (query = '', page = 1) => {
       `*, 
        product_images(*), 
        brand:brand_id(id, name, slug), 
-       category:category_id(id, name, slug)`,
+       category:category_id(id, name, slug),
+       product_wishlist!inner(user_id)`,
       { count: 'exact' },
     )
     .eq('is_active', true)
     .order('created_at', { ascending: false })
     .range(from, to)
+
+  if (wishlist) {
+    if (!currentUserId) return { products: [], totalPages: 0 }
+    supabaseQuery = supabaseQuery.eq('product_wishlist.user_id', currentUserId)
+  } else {
+    supabaseQuery = supabase
+      .from('products')
+      .select(
+        `*, 
+       product_images(*), 
+       brand:brand_id(id, name, slug), 
+       category:category_id(id, name, slug),
+       product_wishlist(user_id)`,
+        { count: 'exact' },
+      )
+      .eq('is_active', true)
+  }
+
+  if (currentUserId) {
+    supabaseQuery = supabaseQuery.eq('product_wishlist.user_id', currentUserId)
+  }
+
+  if (offers) {
+    supabaseQuery = supabaseQuery.not('discount_price', 'is', null)
+  }
 
   if (query) {
     supabaseQuery = supabaseQuery.or(

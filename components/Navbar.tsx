@@ -6,9 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Button } from './ui/button'
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -24,23 +22,18 @@ const navLinks = [
     protected: false,
   },
   {
-    name: 'Categories',
-    href: '/categories',
-    protected: false,
-  },
-  {
     name: 'Offers',
     href: '/offers',
     protected: false,
   },
   {
-    name: 'Orders',
-    href: '/orders',
+    name: 'Wishlist',
+    href: '/wishlist',
     protected: true,
   },
   {
-    name: 'Wishlist',
-    href: '/wishlist',
+    name: 'Orders',
+    href: '/orders',
     protected: true,
   },
   {

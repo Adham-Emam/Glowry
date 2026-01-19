@@ -19,7 +19,13 @@ import {
   PaginationPrevious,
 } from '../ui/pagination'
 
-export default function ProductsComponent() {
+export default function ProductsComponent({
+  offers,
+  wishlist,
+}: {
+  offers?: boolean
+  wishlist?: boolean
+}) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -34,6 +40,8 @@ export default function ProductsComponent() {
         const { products, totalPages } = await getProducts(
           currentSearch,
           currentPage,
+          offers,
+          wishlist,
         )
         setProducts(products)
         setTotalPages(totalPages)

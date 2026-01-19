@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import type { Product } from '@/types/products'
 
+import { Badge } from '@/components/ui/badge'
+
 export default function ProductCard({ product }: { product: Product }) {
   const primaryImage =
     product.product_images?.find((img) => img.is_primary)?.display_url ||
@@ -23,6 +25,14 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       <div className="p-4">
+        <div className="mb-2 flex items-center gap-2">
+          <Badge variant="outline" className="rounded-full">
+            {product.brand?.name}
+          </Badge>
+          <Badge variant="secondary" className="rounded-full">
+            {product.category?.name}
+          </Badge>
+        </div>
         <h3 className="text-lg font-semibold line-clamp-2">{product.name}</h3>
 
         <p className="mt-2 text-sm text-muted-foreground line-clamp-2">

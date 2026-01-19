@@ -37,3 +37,10 @@ export interface Product {
   created_at: string
   product_images: ProductImage[]
 }
+
+export interface Category {
+  id: number
+  name: string
+  slug: string
+  created_at: string
+}

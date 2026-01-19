@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
-import { getProducts } from '@/supabase/products'
-import type { Product } from '@/types/products'
+import { useState, useEffect, useCallback, use } from 'react'
+import { getProducts, getCategories } from '@/supabase/products'
+import { useSearchParams } from 'next/navigation'
+import type { Product, Category } from '@/types/products'
 import { toast } from 'sonner'
-import { Search } from 'lucide-react'
+import { Search, Funnel } from 'lucide-react'
 
 import ProductCard from './ProductCard'
 import ProductCardSkeleton from './ProductCardSkeleton'
@@ -18,6 +19,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '../ui/pagination'
+import Combobox from '../ui/combobox'
 
 export default function ProductsComponent({
   offers,
@@ -31,10 +33,26 @@ export default function ProductsComponent({
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [categories, setCategories] = useState<Category[] | null>(null)
+
+  const searchParams = useSearchParams()
+  const categorySlug = searchParams.get('category')
+
+  const fetchCategories = async () => {
+    const { data, error } = await getCategories()
+
+    if (error) {
+      toast.error(error || 'Failed to load categories')
+    }
+
+    if (data) {
+      setCategories(data as Category[])
+    }
+  }
 
   // Memoize the fetcher to prevent re-renders
   const fetchData = useCallback(
-    async (currentSearch: string, currentPage: number) => {
+    async (currentSearch: string, currentPage: number, slug: string | null) => {
       setLoading(true)
       try {
         const { products, totalPages } = await getProducts(
@@ -42,6 +60,7 @@ export default function ProductsComponent({
           currentPage,
           offers,
           wishlist,
+          slug,
         )
         setProducts(products)
         setTotalPages(totalPages)
@@ -51,17 +70,23 @@ export default function ProductsComponent({
         setLoading(false)
       }
     },
-    [],
+    [offers, wishlist], // Dependencies updated
   )
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
-  // Single Source of Truth for Data Fetching
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      fetchData(search, page)
+      fetchData(search, page, categorySlug)
     }, 400)
 
     return () => clearTimeout(delayDebounceFn)
-  }, [search, page, fetchData])
+  }, [search, page, categorySlug, fetchData])
+
+  useEffect(() => {
+    setPage(1)
+  }, [categorySlug])
 
   // Handle Search Input (resets to page 1)
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +115,7 @@ export default function ProductsComponent({
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Simplified Search Bar */}
-      <div className="mb-6 relative group">
+      <div className="mb-6 relative group flex items-center gap-2">
         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
           <Search size={20} />
         </div>
@@ -101,6 +126,9 @@ export default function ProductsComponent({
           placeholder="Search products..."
           className="w-full pl-12 pr-4 py-3 bg-card border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all shadow-sm"
         />
+        {categories && (
+          <Combobox title="Category" Icon={Funnel} items={categories} />
+        )}
       </div>
 
       {products.length === 0 && !loading && <EmptyProducts />}

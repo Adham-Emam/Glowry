@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import ProductsComponent from '@/components/Landing/ProductsComponent'
-
 export const metadata: Metadata = {
   title: 'Glowry | Offers',
 }
@@ -8,7 +8,9 @@ export const metadata: Metadata = {
 export default function OffersPage() {
   return (
     <>
-      <ProductsComponent offers />
+      <Suspense fallback={null}>
+        <ProductsComponent offers />
+      </Suspense>
     </>
   )
 }

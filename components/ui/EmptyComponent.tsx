@@ -1,6 +1,5 @@
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
@@ -8,16 +7,16 @@ import {
 } from '@/components/ui/empty'
 import { PackageSearch } from 'lucide-react'
 
-export default function EmptyProducts() {
+export default function EmptyComponent({title, message,}:{title:string, message:string}) {
   return (
-    <Empty>
+    <Empty className='mt-25'>
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <PackageSearch className="text-muted-foreground w-full" />
         </EmptyMedia>
-        <EmptyTitle>No products found</EmptyTitle>
+        <EmptyTitle>{title}</EmptyTitle>
         <EmptyDescription>
-          No products found, stay tuned for upcoming products.
+          {message}
         </EmptyDescription>
       </EmptyHeader>
     </Empty>

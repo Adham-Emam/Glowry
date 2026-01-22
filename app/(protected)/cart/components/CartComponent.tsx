@@ -1,8 +1,11 @@
 'use client'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from '@/redux/store'
-import { changeQuantity, removeFromCart } from '@/redux/slices/cartSlice'
+import { createOrder } from '@/supabase/orders'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import type { RootState } from '@/redux/store'
+import { changeQuantity, removeFromCart, clearCart} from '@/redux/slices/cartSlice'
 import {
   Minus,
   Plus,
@@ -12,10 +15,12 @@ import {
   ShieldCheck,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function CartComponent() {
   const dispatch = useDispatch()
+  const router = useRouter()
   const { items } = useSelector((state: RootState) => state.cart)
 
   // Calculations
@@ -23,8 +28,25 @@ export default function CartComponent() {
     (acc, item) => acc + item.price * item.quantity,
     0,
   )
-  const shipping = subtotal > 1000 ? 0 : 50 // Example: Free shipping over 1000 LE
-  const total = (subtotal + shipping).toFixed(2)
+  const shipping = subtotal > 1000 ? 0 : 50
+  const total = (subtotal + shipping)
+
+  const handleCheckout = async () => {
+    if (items.length === 0) return toast.error('Your cart is empty')
+
+    const loadingToast = toast.loading('Processing order...')
+
+    const result = await createOrder(items, total)
+
+    if (result.success) {
+      toast.success('Order placed successfully!', { id: loadingToast })
+      dispatch(clearCart()) // Clear Redux state
+      router.push('/orders') // Redirect to order history
+    } else {
+      toast.error(result.error || 'Checkout failed', { id: loadingToast })
+    }
+  }
+
 
   if (items.length === 0) {
     return (
@@ -72,9 +94,11 @@ export default function CartComponent() {
             >
               {/* Product Image */}
               <div className="h-32 w-32 shrink-0 mx-auto sm:mx-0">
-                <img
+                <Image
                   src={item.image}
                   alt={item.name}
+                  width={100}
+                  height={100}
                   className="h-full w-full object-cover rounded-xl border"
                 />
               </div>
@@ -174,12 +198,12 @@ export default function CartComponent() {
 
               <div className="flex justify-between items-center text-xl font-bold">
                 <span>Total</span>
-                <span className="text-primary">{total} LE</span>
+                <span className="text-primary">{total.toFixed(2)} LE</span>
               </div>
             </div>
 
-            <Button className="w-full h-14 rounded-full text-lg font-bold mt-8 shadow-lg shadow-primary/20 transition-transform active:scale-95">
-              Proceed to Checkout
+            <Button onClick={handleCheckout} className="w-full h-14 rounded-full text-lg font-bold mt-8 shadow-lg shadow-primary/20 transition-transform active:scale-95">
+              Place Order
             </Button>
 
             <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground uppercase tracking-widest">

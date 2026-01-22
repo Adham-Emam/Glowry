@@ -29,6 +29,7 @@ export default function ProductImage({ product }: { product: Product }) {
                 src={img.display_url}
                 alt={product.name}
                 fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 500px"
                 className="object-cover"
                 priority={index === 0}
               />

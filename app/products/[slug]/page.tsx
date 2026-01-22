@@ -66,14 +66,14 @@ export default async function ProductDetailPage({
             {hasDiscount ? (
               <>
                 <span className="text-3xl font-bold text-muted-foreground">
-                  ${product.discount_price}
+                  {product.discount_price}LE
                 </span>
                 <span className="text-xl text-destructive line-through">
-                  ${product.price}
+                  {product.price}LE
                 </span>
               </>
             ) : (
-              <span className="text-3xl font-bold">${product.price}</span>
+              <span className="text-3xl font-bold">{product.price}LE</span>
             )}
           </div>
 

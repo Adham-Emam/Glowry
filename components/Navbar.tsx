@@ -1,7 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/supabase/hooks/useAuth'
+import { useSelector } from 'react-redux'
+import { selectCartUniqueItems } from '@/redux/slices/cartSlice'
 import { usePathname } from 'next/navigation'
 import { Button } from './ui/button'
 import {
@@ -46,6 +49,9 @@ const navLinks = [
 export default function Navbar() {
   const pathname = usePathname()
   const { isAuthenticated } = useAuth()
+  const [open, setOpen] = useState(false)
+
+  const totalItems = useSelector(selectCartUniqueItems)
 
   return (
     <header className="container py-6 flex items-center justify-between">
@@ -76,7 +82,12 @@ export default function Navbar() {
         {isAuthenticated ? (
           <>
             <Button size="icon" asChild>
-              <Link href="/cart">
+              <Link className="relative" href="/cart">
+                {totalItems > 0 && (
+                  <div className="absolute -top-1/2 -left-1/2 bg-accent text-accent-foreground border font-bold p-1 rounded-full w-8 h-8 flex items-center justify-center">
+                    {totalItems}
+                  </div>
+                )}
                 <ShoppingCart />
               </Link>
             </Button>
@@ -104,7 +115,7 @@ export default function Navbar() {
       </div>
 
       <div className="lg:hidden">
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button size="icon" variant="outline">
               <Menu />
@@ -121,10 +132,9 @@ export default function Navbar() {
                   <div key={index} className=" w-full">
                     <Link
                       href={link.href}
-                      className={`block hover:bg-primary/50 px-4 py-4 overflow-y-auto duration-200 ${
-                        pathname === link.href
-                          ? 'bg-primary text-white hover:bg-primary!'
-                          : ''
+                      onClick={() => setOpen(false)}
+                      className={`block hover:bg-primary/50 px-4 py-4 duration-200 ${
+                        pathname === link.href ? 'bg-primary text-white' : ''
                       }`}
                     >
                       {link.name}
@@ -132,37 +142,44 @@ export default function Navbar() {
                     <Separator className="my-2" />
                   </div>
                 ))}
+
               {isAuthenticated && (
                 <Link
                   href="/cart"
-                  className={`block hover:bg-primary/50 px-4 py-4 overflow-y-auto duration-200 ${
-                    pathname === '/cart'
-                      ? 'bg-primary text-white hover:bg-primary!'
-                      : ''
+                  onClick={() => setOpen(false)}
+                  className={`block hover:bg-primary/50 px-4 py-4 duration-200 ${
+                    pathname === '/cart' ? 'bg-primary text-white' : ''
                   }`}
                 >
                   Shopping Cart
                 </Link>
               )}
             </nav>
-            <SheetFooter>
+
+            <SheetFooter className="flex-col gap-2">
               {isAuthenticated ? (
                 <Button
                   variant="destructive"
-                  className="w-full border border-ring hover:bg-destructive hover:text-white"
+                  className="w-full"
                   asChild
+                  onClick={() => setOpen(false)}
                 >
                   <Link href="/logout">Sign Out</Link>
                 </Button>
               ) : (
-                <>
-                  <Button variant="secondary" className="border">
+                <div className="flex flex-col gap-2 w-full">
+                  <Button
+                    variant="secondary"
+                    className="border"
+                    asChild
+                    onClick={() => setOpen(false)}
+                  >
                     <Link href="/register">Register</Link>
                   </Button>
-                  <Button>
+                  <Button asChild onClick={() => setOpen(false)}>
                     <Link href="/login">Login</Link>
                   </Button>
-                </>
+                </div>
               )}
             </SheetFooter>
           </SheetContent>

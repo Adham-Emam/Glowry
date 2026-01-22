@@ -9,7 +9,7 @@ import { Search, Funnel } from 'lucide-react'
 
 import ProductCard from './ProductCard'
 import ProductCardSkeleton from './ProductCardSkeleton'
-import EmptyProducts from '../ui/EmptyProducts'
+import EmptyComponent from '../ui/EmptyComponent'
 import { Button } from '../ui/button'
 import {
   Pagination,
@@ -131,7 +131,12 @@ export default function ProductsComponent({
         )}
       </div>
 
-      {products.length === 0 && !loading && <EmptyProducts />}
+      {products.length === 0 && !loading && (
+        <EmptyComponent
+          title="No Products Found"
+          message="We couldn't find any products that match your search or selected category."
+        />
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {loading

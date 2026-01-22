@@ -55,4 +55,12 @@ export const {
   removeFromCart,
   clearCart,
 } = cartSlice.actions
+
+// SELECTORS
+export const selectCartTotalItems = (state: { cart: CartState }) => 
+  state.cart.items.reduce((total, item) => total + item.quantity, 0)
+
+export const selectCartUniqueItems = (state: { cart: CartState }) => 
+  state.cart.items.length
+
 export default cartSlice.reducer
